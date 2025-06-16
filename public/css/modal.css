@@ -1,0 +1,150 @@
+/* Modal overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+  z-index: 999;
+  display: flex; /* centrer le contenu */
+  align-items: center;
+  justify-content: center;
+}
+
+/* Modal container */
+.modal-container {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 12px var(--shadow);
+  padding: 30px;
+  max-width: 480px;
+  width: 100%;
+  font-family: inherit;
+  color: var(--text);
+}
+
+.modal-container h3 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  text-align: center;
+  color: var(--primary);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--subtext);
+  font-size: 0.9rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 1rem;
+}
+
+.modal-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.modal-buttons .btn {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 1rem;
+  transition: opacity 0.2s;
+}
+
+.modal-buttons .btn:hover {
+  opacity: 0.9;
+}
+
+.btn-danger {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.btn-cancel {
+  background-color: #ccc;
+  color: #333;
+}
+
+/* === Discord-style Profile Modal === */
+/* Overlay semi-opaque now géré ci-dessus */
+/* Conteneur Discord-style */
+.discord-modal {
+  background: #2f3136;
+  color: #dcddde;
+  border-radius: 8px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+  padding: 24px;
+  width: 360px;
+  max-width: 90%;
+  font-family: var(--font-body);
+  position: relative;
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: slideInFade 0.25s ease-out forwards;
+}
+
+/* Avatar stylé Discord */
+.discord-modal img#modal-player-avatar {
+  border: 2px solid #202225;
+  border-radius: 50%;
+  margin-bottom: 16px;
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  animation: avatarPulse 2s infinite ease-in-out;
+}
+
+/* Bouton Fermer en haut à droite */
+.discord-modal #modal-close-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: #b9bbbe;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.discord-modal #modal-close-btn:hover {
+  color: #dcddde;
+}
+
+/* Titres en haut plus marqués */
+.discord-modal h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Animations clés */
+@keyframes slideInFade {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes avatarPulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.05); }
+}

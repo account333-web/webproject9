@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="assets/icon.png" sizes="32x32" type="image/png">
+  <title>Snake Glitchy</title>
+  <script src="/js/utils/i18n.js" defer></script>
+  <style>
+    /* Styles de base */
+    body {
+  margin: 0;
+  background: #fafafa;
+  /* on reprend le centrage Flexbox */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+#title {
+  position: absolute; top: 10px; left: 50%;
+  transform: translateX(-50%); color: #333;
+  font-size: 2rem; z-index: 500; user-select: none;
+}
+
+#game-wrapper {
+  /* plus de position absolute ni de transform */
+  position: relative;
+  width: 400px;
+  height: 400px;
+  overflow: hidden;
+}
+
+    canvas {
+      background: #111; display: block;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      transition: filter 0.2s;
+    }
+    #score {
+      position: absolute; top: 10px; left: 10px;
+      color: #fff; font-size: 1.2rem; z-index: 500;
+    }
+    #message {
+      position: absolute; top: 60px; width: 100%;
+      text-align: center; color: rgb(95, 95, 3); font-size: 1.2rem;
+      z-index: 500; display: none; opacity: 0;
+    }
+    /* Overlay de crash */
+    #crash-overlay {
+      position: fixed; inset: 0; background: rgba(255,255,255,0.8);
+      display: none; justify-content: center; align-items: center;
+      z-index: 1000;
+    }
+    #crash-popup {
+      width: 460px; border: 1px solid #868686;
+      background: #fff; display: none;
+    }
+    .titlebar { display:flex; align-items:center;
+      background:#fff; color:#0078d7; height:32px;
+      padding:0 8px; font-size:14px; user-select:none;
+    }
+    .titlebar .icon {
+      width:16px; height:16px; margin-right:8px;
+      background:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAABKlBMVEUAAAD///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz/////////9x0ebSAAAAUHRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExUXGBkaGxwdHh8gISIjJCUmJywtLi8wMTIzNDY3Ozw9PkBLTlQsAAAArUlEQVQYlX3PSw6CMBQG4E4QqBSBfjzuV79/7+gOgkTzSdpNkXF8ZQae5JQ3huJo4+R4rMTgIudjGpIAXjvMF9bCwKJEtccvdmhjRh3oMNeMJoNcnN3zTBjMq9Kb9mZEvmnyBiuCkp1y3tUvEU3rMYBSx4nW8xYV5jY08QbUHBwZNF8Utucp+Kg3wLlC5LPbQAAAABJRU5ErkJggg==') no-repeat center;
+    }
+    .titlebar .title { flex-grow:1; margin-top:4px; }
+    .content { padding:16px; font-size:14px; color:#000; }
+    .actions { padding:0 16px 16px; }
+    .actions ul { list-style:none; margin:0; padding:0; }
+    .actions li { margin:8px 0; }
+    .actions a { text-decoration:none; font-size:14px;
+      color:#0078d7; cursor:pointer;
+    }
+    .actions a:hover { text-decoration:underline; }
+
+    /* Torture animations & filters */
+    @keyframes shake {
+      0% { transform: translate(0,0); }
+      25% { transform: translate(5px,-5px); }
+      50% { transform: translate(-5px,5px); }
+      75% { transform: translate(5px,5px); }
+      100% { transform: translate(0,0); }
+    }
+    .shake { animation: shake 0.3s infinite; }
+    .invert { filter: invert(1); }
+  </style>
+</head>
+<body>
+  <div id="title" data-i18n="snakeTitle">Snake</div>
+  <div id="game-wrapper">
+    <canvas id="game" width="400" height="400"></canvas>
+  </div>
+  <div id="score" data-i18n="scoreLabel">Score: 0</div>
+  <div id="message"></div>
+
+  <div id="crash-overlay">
+    <div id="crash-popup">
+      <div class="titlebar">
+        <div class="icon"></div>
+        <div class="title" data-i18n="notResponding">SnakeGame.exe ne répond plus</div>
+      </div>
+      <div class="content">
+        <p data-i18n="programNotResponding">Ce programme ne répond plus.</p>
+      </div>
+      <div class="actions">
+        <ul>
+          <li><a id="restart" data-i18n="restart">→ Redémarrer</a></li>
+          <li><a id="close" data-i18n="close">→ Fermer</a></li>
+          <li><a id="wait" data-i18n="wait">→ Attendre</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <script src="/js/utils/api.js" defer></script>
+  <script src="/js/game/snake.js"></script>
+</body>
+</html>

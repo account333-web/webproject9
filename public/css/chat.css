@@ -1,0 +1,76 @@
+/* public/css/chat.css */
+
+/* Bouton d’ouverture du chat */
+#chat-button {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  border-radius: 100px;
+  background-color: #fff;
+  border-width: 5px;
+  border-color: #007bff;
+  color: #fff;
+  font-size: 24px;
+  text-align: center;
+  line-height: 60px;
+  cursor: pointer;
+  z-index: 1000;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  transition:
+    width    0.3s ease-in-out,
+    bottom   0.3s ease-in-out,
+    right  0.3s ease-in-out,
+    background-color 0.3s ease-in-out,
+    height   0.3s ease-in-out,
+    line-height 0.3s ease-in-out;
+}
+#chat-button:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+/* Popup chat */
+#chat-popup {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  width: 300px;
+  height: 400px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  display: none;
+  flex-direction: column;
+  z-index: 1000;
+  margin-bottom: 10px;
+}
+
+/* Zone messages */
+#chat-messages {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  font-size: 14px;
+}
+
+/* Entrée et bouton */
+#chat-input {
+  display: flex;
+  border-top: 1px solid #eee;
+}
+#chat-input input {
+  flex: 1;
+  border: none;
+  padding: 8px;
+  border-radius: 0 0 0 15px;
+}
+#chat-input button {
+  border: none;
+  border-radius: 0 0 15px 0;
+  background: #007bff;
+  color: #fff;
+  padding: 0 16px;
+  cursor: pointer;
+}

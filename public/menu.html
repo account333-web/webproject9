@@ -1,0 +1,72 @@
+<!-- menu.html -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nerd Corner</title>
+  <link rel="stylesheet" href="css/menu.css" type="text/css" />
+  <link rel="icon" href="assets/icon.png" sizes="32x32" type="image/png" />
+  <!-- Préchargement des ressources critiques -->
+  <link rel="preload" href="assets/nerd.png" as="image" />
+  <link rel="preload" href="assets/snake.png" as="image" />
+  <link rel="preload" href="assets/color.png" as="image" />
+  <link rel="preload" href="assets/pong.png" as="image" />
+  <!-- Chargement différé des scripts non critiques -->
+  <script src="/js/utils/api.js" defer></script>
+  <script src="/js/utils/i18n.js" defer></script>
+  <script src="/js/menu/menu.js" defer></script>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <div class="emoji-nerd" role="img" aria-label="Nerd Icon">
+        <img src="assets/nerd.png" alt="Nerd Icon" />
+      </div>
+      <h1 id="logo-text">Nerd Corner</h1>
+    </div>
+    <nav class="nav-links">
+      <a href="/index.html" id="login-link" data-i18n="login">login</a>
+      <a href="/signup.html" class="sign-up" id="signup-link" data-i18n="signup">sign up</a>
+      <a href="/dashboard.html" class="dashboard btn" id="dashboard-link" style="display:none" data-i18n="dashboard">dashboard</a>
+      <a href="/profile.html" class="profile btn" id="profile-link" style="display:none" data-i18n="profile">profile</a>
+      <a href="#" id="logout-link" style="display:none" data-i18n="logout">logout</a>
+      <select name="language" id="lang-select">
+        <option value="fr" data-i18n="optionFr">French</option>
+        <option value="en" data-i18n="optionEn">English</option>
+      </select>
+    </nav>
+  </header>
+  <main>
+    <!-- Conteneur unique : on y injecte tpl-logged ou tpl-guest et on lui ajoute la classe appropriée -->
+    <div id="player-container" class="guest"></div>
+    <template id="tpl-logged">
+      <h1 class="logged-title"><span class="username"></span></h1>
+      <div class="logged-balance"><span class="balance"></span></div>
+      <p class="logged-info"><span class="badges"></span></p>
+      <p class="logged-info"><span data-i18n="rank"></span> <span class="rank"></span></p>
+    </template>
+    <template id="tpl-guest">
+      <h1 class="guest-title" data-i18n="joinTitle">Rejoignez-nous !</h1>
+      <p class="guest-info" data-i18n="joinInfo">Connectez-vous pour accéder à toutes les fonctionnalités !</p>
+      <a class="btn join-btn" href="/index.html" data-i18n="joinBtn">Connexion</a>
+    </template>
+    <hr />
+
+    <div class="cards">
+      <div class="card" data-link="/snake.html">
+        <img src="assets/snake.png" alt="Snake Game" />
+        <div class="label" data-i18n="snake">Snake</div>
+      </div>
+      <div class="card" data-link="/color.html">
+        <img src="assets/color.png" alt="Color Game" />
+        <div class="label" data-i18n="colorGame">Color Game</div>
+      </div>
+      <div class="card" data-link="/pong.html">
+        <img src="assets/pong.png" alt="Pong Game" />
+        <div class="label" data-i18n="pong">Pong</div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

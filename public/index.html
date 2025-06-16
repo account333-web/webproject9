@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Connexion - NerdSociety</title>
+  <script src="/js/UX/theme_init.js"></script>
+  <link rel="stylesheet" href="css/index.css" type="text/css">
+  <link rel="icon" href="assets/icon.png" sizes="32x32" type="image/png">
+  <script src="https://cdn.jsdelivr.net/npm/pixi.js@8.9.2/dist/pixi.min.js"></script>
+  <script src="/js/utils/i18n.js" defer></script>
+</head>
+<body>
+  <canvas id="candlestick-bg"></canvas>
+  <div class="login-card">
+    <center><div class="emoji-nerd" role="img" aria-label="Nerd qui pointe le doigt">
+      <span class="nerd-face">🤓</span>
+      <span class="nerd-hand">☝️</span>
+    </div></center>
+    <h1>Nerd Society</h1>
+    <h2 data-i18n="loginTitle">Connexion</h2>
+
+    <!-- zone d'alerte -->
+    <div id="alert"></div>
+
+    <form action="/login" method="POST">
+      <div class="form-group">
+        <label for="pseudo" data-i18n="usernameLabel">Pseudo</label>
+        <input type="text" id="pseudo" name="pseudo" placeholder="Nom d'utilisateur" data-i18n-placeholder="usernamePlaceholder" required />
+      </div>
+      <div class="form-group">
+        <label for="password" data-i18n="passwordLabel">Mot de passe</label>
+        <input type="password" id="password" name="password" placeholder="••••••••" data-i18n-placeholder="passwordPlaceholder" required />
+      </div>
+      <button type="submit" class="btn" data-i18n="loginBtn">Se connecter</button>
+    </form>
+    <script src="/js/utils/api.js" defer></script>
+    <div class="options">
+      <a href="/forgot-password" data-i18n="forgot">Mot de passe oublié ?</a>
+      <a href="/signup.html" data-i18n="createAccount">Créer un compte</a>
+    </div>
+  </div>
+  <p class="credit">made and maintained by chatgpt</p>
+  <script src="/js/signin/index.js"></script>
+</body>
+</html>

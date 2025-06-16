@@ -1,0 +1,67 @@
+/* wrapper qui garde toujours 80px de haut */
+.wallet-wrapper {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--wallet-height);
+  margin-bottom: var(--wallet-padding);
+  z-index: 100;
+}
+
+.wallet {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 4px var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--wallet-height);
+  padding: 0 var(--wallet-padding);
+  border-radius: var(--radius);
+  margin: 0 20px 0 20px;
+  /*  transition:
+    width    0.1s ease-in-out,
+    margin   0.3s ease-in-out,
+    padding  0.3s ease-in-out,
+    border-radius 0.3s ease-in-out,
+    height   0.3s ease-in-out; */
+  will-change: width, margin, padding, border-radius, height;
+  cursor: pointer;
+}
+
+.wallet-company,
+.wallet-country {
+  font-size: 0.875rem;
+  color: var(--subtext);
+}
+
+.wallet-balance {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--text);
+}
+
+.wallet.sticky {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  /* on retire width, transform et margin statiques */
+  width: auto;
+  padding: 0 var(--wallet-padding);
+  border-radius: 0;
+  z-index: 1000;
+  backdrop-filter: blur(var(--wallet-blur));
+  -webkit-backdrop-filter: blur(var(--wallet-blur));
+}
+
+/* 3) Shrink (hauteur réduite) */
+.wallet.shrink {
+  height: var(--wallet-height-shrink);
+}

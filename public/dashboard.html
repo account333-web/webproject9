@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ClickSociety Dashboard</title>
+  <script src="/js/UX/theme_init.js"></script>
+  <link rel="stylesheet" href="css/dashboard.css" type="text/css">
+  <link rel="stylesheet" href="css/modal.css" type="text/css">
+  <link rel="stylesheet" href="css/wallet.css" type="text/css">
+  <link rel="icon" href="assets/icon.png" sizes="32x32" type="image/png">
+  <link rel="stylesheet" href="/css/toast.css">
+  <link rel="stylesheet" href="/css/chat.css">
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.35.3" crossorigin="anonymous"></script>
+  <script type="module" src="/js/UX/toast.js" defer></script>
+  <script src="/js/utils/i18n.js" defer></script>
+</head>
+<body>
+  <div class="wallet-wrapper">
+    <header class="wallet" id="wallet">
+  <span class="wallet-company"><span data-i18n="company">Entreprise :</span> <span id="company-text"></span></span>
+  <div class="wallet-balance" id="balance-text">
+    <span id="blackTrigger" class="black-emoji">💰</span>
+    <span id="balance-value">0</span>
+  </div>
+  <span class="wallet-country"><span data-i18n="country">Pays :</span> <span id="country-text"></span></span>
+    </header>
+  </div>
+  <div class="container">
+    <!-- Classements -->
+    <!-- ==============================================
+     SECTION : Classements (avec onglets)
+============================================== -->
+<section class="card classtab-card" style="opacity:0; animation: fadeIn 0.4s ease forwards; animation-delay: 0.1s;" data-delay="0.1s">
+  <h2 data-i18n="leaderboards">Classements</h2>
+
+  <!-- 1) Barre d’onglets -->
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="players" data-i18n="players">Joueurs</button>
+    <button class="tab-btn" data-tab="companies" data-i18n="companies">Entreprises</button>
+    <button class="tab-btn" data-tab="countries" data-i18n="countries">Pays</button>
+  </div>
+
+  <!-- 2) Contenus des onglets -->
+  <div class="tab-contents">
+    <!-- Onglet “Joueurs” -->
+    <div class="tab-pane active" id="tab-players">
+      <ol id="ranking-players" class="ranking-list">
+        <li><div class="skeleton" style="width: 50%;"></div></li>
+        <li><div class="skeleton" style="width: 80%;"></div></li>
+        <li><div class="skeleton" style="width: 60%;"></div></li>
+      </ol>
+    </div>
+    <!-- Onglet “Entreprises” -->
+    <div class="tab-pane" id="tab-companies">
+      <ol id="ranking-companies" class="ranking-list">
+        <li><div class="skeleton" style="width: 65%;"></div></li>
+        <li><div class="skeleton" style="width: 55%;"></div></li>
+        <li><div class="skeleton" style="width: 75%;"></div></li>
+      </ol>
+    </div>
+    <!-- Onglet “Pays” -->
+    <div class="tab-pane" id="tab-countries">
+      <ol id="ranking-countries" class="ranking-list">
+        <!-- Skeleton loaders en attendant la récup des données -->
+        <li><div class="skeleton" style="width: 60%;"></div></li>
+        <li><div class="skeleton" style="width: 50%;"></div></li>
+        <li><div class="skeleton" style="width: 70%;"></div></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+    <!-- ==============================================
+     SECTION : Pays (carousel de “cartes d’identité”)
+============================================== -->
+<section class="card country-carousel" style="opacity:0; animation: fadeIn 0.4s ease forwards; animation-delay: 0.2s;" data-delay="0.2s">
+  <h2 data-i18n="countries">Pays</h2>
+
+  <div class="carousel-container">
+    <!-- Flèche “précédent” -->
+    <button class="carousel-btn prev" aria-label="Précédent" data-i18n="prev">
+      &lt;
+    </button>
+
+    <!-- Piste du carousel -->
+    <div class="carousel-track-container">
+      <ul id="country-track" class="carousel-track">
+        <!-- Exemples de “skeleton” pendant le chargement (remplacer dynamiquement via JS) -->
+        <li class="carousel-item">
+          <div class="country-card">
+            <div class="skeleton" style="width:100%; height:160px;"></div>
+          </div>
+        </li>
+        <li class="carousel-item">
+          <div class="country-card">
+            <div class="skeleton" style="width:100%; height:160px;"></div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Flèche “suivant” -->
+    <button class="carousel-btn next" aria-label="Suivant" data-i18n="next">
+      &gt;
+    </button>
+  </div>
+</section>
+
+
+    <section class="card companies-card" style="opacity:0; animation: fadeIn 0.4s ease forwards; animation-delay: 0.3s;" data-delay="0.3s"> 
+      <h2 data-i18n="companies">Entreprises</h2>
+      <ul id="companies-list" class="list"> 
+        <li>
+          <div class="skeleton" style="width: 70%;"></div>
+        </li>
+        <li>
+          <div class="skeleton" style="width: 60%;"></div>
+        </li>
+        <li>
+          <div class="skeleton" style="width: 65%;"></div>
+        </li>
+      </ul>
+      <button id="create-company-btn" class="btn" data-i18n="createCompany">Créer une entreprise</button>
+    </section>
+
+    <!-- Graphique en chandelles ClickCoin -->
+    <section class="card chart-card" style="opacity:0; animation: fadeIn 0.4s ease forwards; animation-delay: 0.4s;" data-delay="0.4s">
+      <h2 data-i18n="clickcoinCourse">Cours du ClickCoin</h2>
+      <div id="clickcoin-chart"></div>
+      <button class="btn" id="trade" style="margin-top: 15px;" data-i18n="startTrade">Commencer à trader</button>
+    </section>
+  </div>
+</div>
+  <script src="/js/utils/api.js" defer></script>
+  <script type="module" src="/js/dashboard/main.js" defer></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/chat/chat.js" defer></script>
+  <!-- <script src="/js/theme.js" defer></script>-->
+  <script src="/js/UX/scroll.js" defer></script>
+    <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <small>
+        Interdiction formelle de tricher ou d’exploiter des failles.  
+        Merci de me signaler immédiatement via <a href="https://discord.com/channels/@me/1043860463903051846" target="_blank">Discord</a> tout bug ou exploit découvert, sans toutefois les utiliser. N'hésitez pas à me contacter pour toute question ou suggestion. Discord id : spectrafire
+      </small>
+    </div>
+  </footer>
+</body>
+</html>

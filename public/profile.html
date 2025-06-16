@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profil - ClickSociety</title>
+  <script src="/js/UX/theme_init.js"></script>
+  <link rel="stylesheet" href="css/profile.css" type="text/css">
+  <link rel="icon" href="assets/icon.png" sizes="32x32" type="image/png">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/js/utils/i18n.js" defer></script>
+</head>
+<body>
+  <header>
+    <h1 data-i18n="welcome">Bienvenue, utilisateur !</h1>
+    <!-- SEUL un nerd expérimenté peut activer le darkmode -->
+    <!-- VENGEANCE MOUAHAHAHAHAH -->
+    <!-- <button class="theme-toggle" id="theme-toggle">🌓</button> -->
+  </header>
+  <main>
+    <section class="card profile-info">
+      <h2 data-i18n="myProfile">Mon Profil</h2>
+      <p><strong data-i18n="balanceLabel">Balance :</strong> <span id="user-balance">💰 0 CC</span></p>
+      <p><strong data-i18n="countryLabel">Pays :</strong> <span id="user-country">—</span></p>
+      <p><strong data-i18n="companyLabel">Entreprise :</strong> <span id="user-company">—</span></p>
+      <div class="actions">
+        <button class="btn" id="menu-btn" data-i18n="menu">Menu</button>
+        <button class="btn" id="logout-btn" data-i18n="logout">Se déconnecter</button>
+      </div>
+    </section>
+    <section class="card profile-avatar">
+      <h2 data-i18n="myAvatar">Mon Avatar</h2>
+      <form id="avatar-form" enctype="multipart/form-data">
+        <input type="file" id="avatar-input" name="avatar" accept="image/*" />
+        <button type="submit" class="btn" data-i18n="upload">Télécharger</button>
+      </form>
+      <img id="avatar-preview" src="/avatars/default.png" alt="Avatar" class="avatar-preview" />
+    </section>
+    <section class="card transactions">
+      <h2 data-i18n="transactions">Transactions</h2>
+      <canvas id="transactions-chart"></canvas>
+      <table>
+        <thead>
+          <tr><th data-i18n="date">Date</th><th data-i18n="percentage">Pourcentage</th><th data-i18n="value">Valeur (CC)</th></tr>
+        </thead>
+        <tbody id="investments-body">
+          <!-- Dynamically loaded -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+  <script src="/js/utils/api.js" defer></script>
+  <script src="/js/profile/profile.js" defer></script>
+  <script src="/js/UX/theme.js" defer></script>
+</body>
+</html>

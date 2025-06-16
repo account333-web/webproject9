@@ -1,0 +1,112 @@
+<!-- trade.html -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trade ClickCoin - ClickSociety</title>
+  <!-- ApexCharts pour chandelier -->
+  <script
+  src="https://cdn.jsdelivr.net/npm/apexcharts@3.35.3"
+  crossorigin="anonymous">
+  </script>
+  <script src="/js/UX/theme_init.js"></script>
+  <link rel="stylesheet" href="css/trade.css" type="text/css">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="assets/icon.png" sizes="32x32" type="image/png">
+  <link rel="stylesheet" href="/css/chat.css">
+  <script src="/js/utils/i18n.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <!-- HEADER STICKY -->
+    <header class="header">
+      <a href="dashboard.html" class="back-button" data-i18n="backDash">← Tableau de bord</a>
+      <div class="asset-select">
+        <label for="asset" data-i18n="asset">Actif :</label>
+        <select id="asset">
+          <option value="clickcoin">ClickCoin</option>
+          <!-- les entreprises seront ajoutées dynamiquement -->
+        </select>
+      </div>
+    </header>
+
+<!-- GRAPHIQUE -->
+<section class="chart-section">
+  <h2 id="chart-title" data-i18n="chartTitle">Cours de ClickCoin</h2>
+
+  <!-- ① le graphe commence par un bloc skeleton -->
+  <div id="trade-chart" class="skeleton" style="height:350px;border-radius:var(--radius);"></div>
+</section>
+
+<!-- INFO-BOXES -->
+<section class="trade-info">
+  <!-- ② chaque <p> contient un span skeleton -->
+  <div class="info-box" data-i18n-title="buyPriceTitle" title="Prix auquel vous pouvez acheter l'actif">
+    <label data-i18n="buyPrice">Prix d'achat actuel</label>
+    <p id="buy-price"><span class="skeleton" style="width:60px;height:20px;"></span></p>
+  </div>
+  <div class="info-box" data-i18n-title="sellPriceTitle" title="Prix auquel vous pouvez vendre l'actif">
+    <label data-i18n="sellPrice">Prix de vente actuel</label>
+    <p id="sell-price"><span class="skeleton" style="width:60px;height:20px;"></span></p>
+  </div>
+  <div class="info-box" data-i18n-title="spreadTitle" title="Prix d'achat - prix de vente">
+    <label data-i18n="spread">Spread</label>
+    <p id="spread"><span class="skeleton" style="width:50px;height:20px;"></span></p>
+  </div>
+  <div class="info-box">
+    <label data-i18n="plPercent">Bénéfices/​Pertes (%)</label>
+    <p id="pl-percent"><span class="skeleton" style="width:70px;height:20px;"></span></p>
+  </div>
+  <div class="info-box">
+    <label data-i18n="plCC">Bénéfices/​Pertes (CC)</label>
+    <p id="pl-cc"><span class="skeleton" style="width:80px;height:20px;"></span></p>
+  </div>
+</section>
+
+    <!-- ACTIONS D’ACHAT/VENTE STICKY -->
+    <section class="trade-actions">
+      <input
+        type="number"
+        id="trade-qty"
+        min="0.01"
+        step="0.01"
+        placeholder="Quantité ou Montant"
+        data-i18n-placeholder="qtyPlaceholder"
+      />
+      <select id="trade-mode">
+        <option value="amount" data-i18n="modeAmount">Montant investi (CC)</option>
+        <option value="quantity" data-i18n="modeQuantity">Quantité</option>
+      </select>
+      <button id="buy-btn" class="btn" title="Acheter les actions" data-i18n="buy">Acheter</button>
+      <button id="sell-btn" class="btn" title="Vendre les actions" data-i18n="sell">Vendre</button>
+    </section>
+
+    <!-- TABLEAU DES INVESTISSEMENTS -->
+    <section class="investments">
+      <h2 data-i18n="ongoing">Investissements en cours</h2>
+      <table>
+        <thead>
+          <tr>
+            <th data-i18n="asset">Actif</th>
+            <th data-i18n="buyDate">Date d'achat</th>
+            <th data-i18n="quantity">Quantité</th>
+            <th data-i18n="buyPrice">Prix d'achat</th>
+            <th data-i18n="currentValue">Valeur actuelle</th>
+            <th data-i18n="plPercent">P/L (%)</th>
+            <th data-i18n="plCC">P/L (CC)</th>
+          </tr>
+        </thead>
+        <tbody id="investments-body">
+          <!-- Rempli dynamiquement -->
+        </tbody>
+      </table>
+    </section>
+  </div>
+  <script src="/js/UX/trade_shrink.js" defer></script>
+  <script src="/js/utils/api.js" defer></script>
+  <script type="module" src="/js/trade/main.js" defer></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/chat/chat.js" defer></script>
+</body>
+</html>

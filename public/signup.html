@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Créer un compte - ClickSociety</title>
+  <script src="/js/UX/theme_init.js"></script>
+  <link rel="stylesheet" href="css/index.css" type="text/css">
+  <link rel="icon" href="assets/icon.png" sizes="32x32" type="image/png">
+  <script src="/js/utils/i18n.js" defer></script>
+</head>
+<body>
+  <canvas id="candlestick-bg"></canvas>
+  <div class="login-card">
+    <center><div class="emoji-nerd" role="img" aria-label="Nerd qui pointe le doigt">
+      <span class="nerd-face">🤓</span>
+      <span class="nerd-hand">☝️</span>
+    </div></center>
+    <h1>Click Society</h1>
+    <h2 data-i18n="signupTitle">Créer un compte</h2>
+
+    <!-- zone d'alerte -->
+    <div id="alert"></div>
+
+    <form action="/signup" method="POST">
+      <div class="form-group">
+        <label for="pseudo" data-i18n="usernameLabel">Pseudo</label>
+        <input type="text" id="pseudo" name="pseudo" placeholder="Nom d'utilisateur" data-i18n-placeholder="usernamePlaceholder" required />
+      </div>
+        <div class="form-group">
+        <label for="password" data-i18n="passwordLabel">Mot de passe</label>
+        <input type="password" id="password" name="password" placeholder="••••••••" data-i18n-placeholder="passwordPlaceholder" required />
+      </div>
+      <div class="form-group">
+        <div class="g-recaptcha" data-sitekey="6LeMsmArAAAAAOZa9yJA1OTa55B52x1P5rfxk8xJ"></div>
+      </div>
+      <button type="submit" class="btn" data-i18n="createAccountBtn">Créer mon compte</button>
+    </form>
+    <script src="/js/utils/api.js" defer></script>
+    <div class="options">
+      <a href="/index.html" data-i18n="already">Déjà un compte ? Connexion</a>
+    </div>
+  </div>
+  <p class="credit">made and maintained by spectra</p>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <script src="/js/signup/signup.js"></script>
+</body>
+</html>

@@ -1,0 +1,216 @@
+/* -------------  trade.css  (nouvelle version) ------------- */
+
+/* 1) Polices + design‑system du dashboard */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Montserrat:wght@600;700&display=swap');
+@import url('base.css');
+/* 2) Variables spécifiques (uniquement ce qui diffère) */
+:root {
+  --header-height: 64px;   /* hauteur du header Trade sticky */
+  --gap: 20px;             /* espace interne générique */
+}
+
+/* 3) Reset éventuels */
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  /* padding: var(--gap);*/
+}
+
+/* ─── GRILLE PRINCIPALE ─────────────────────────────────── */
+.container {
+  display: grid;
+  grid-template-areas:
+    "header  header"
+    "chart   info"
+    "actions actions"
+    "investments investments";
+  grid-template-columns: 1fr 300px;
+  gap: var(--gap);
+  padding: 0 20px 20px 20px;
+}
+
+/* ─── HEADER STICKY ─────────────────────────────────────── */
+.header {
+  grid-area: header;
+  position: sticky;
+  top: 0;
+  height: var(--header-height);
+  background: var(--card-bg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--gap);
+  box-shadow: 0 2px 8px var(--shadow);
+  border-radius: var(--radius);
+  z-index: 10;
+  /* animation dashboard */
+  opacity: 0;
+  animation: fadeIn 0.4s ease forwards;
+}
+
+/* Bouton retour & sélecteur */
+.back-button    { font-size: 1.3rem; color: var(--primary); text-decoration: none; }
+.back-button:hover { opacity: .8; }
+.asset-select      { display:flex; align-items:center; gap:8px; }
+.asset-select select{
+  padding: 8px;
+  border:1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card-bg);
+}
+
+/* ─── GRAPHIQUE ─────────────────────────────────────────── */
+.chart-section {
+  grid-area: chart;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 12px var(--shadow);
+  padding: var(--gap);
+  /* apparition douce */
+  opacity: 0; animation: fadeIn 0.4s ease forwards; animation-delay: .1s;
+}
+#trade-chart { width:100%; height:350px; }
+
+/* ─── INFO‑BOXES ────────────────────────────────────────── */
+.trade-info {
+  grid-area: info;
+  display: flex; flex-wrap: wrap; gap: var(--gap);
+  opacity: 0; animation: fadeIn 0.4s ease forwards; animation-delay: .2s;
+}
+.info-box {
+  flex:1 1 130px;
+  background: var(--card-bg);
+  border:1px solid var(--border);
+  border-radius: var(--radius);
+  padding:15px;
+  box-shadow:0 2px 6px var(--shadow);
+  text-align:center;
+  transition: background .2s;
+}
+.info-box:hover { background:#fafafa; }
+.info-box label{ display:block; font-size:.875rem; color:var(--subtext); margin-bottom:5px; }
+.info-box p    { font-size:1.25rem; font-weight:bold; }
+
+/* ─── ACTIONS STICKY EN BAS ─────────────────────────────── */
+.trade-actions{
+  grid-area: actions;
+  position: sticky; bottom:0;
+  background: var(--card-bg);
+  display:flex; flex-wrap:wrap; gap:var(--gap); align-items:center;
+  padding:var(--gap);
+  box-shadow:0 2px 8px var(--shadow);
+  border-radius:var(--radius);
+  opacity:0; animation: fadeIn 0.4s ease forwards; animation-delay:.3s;
+}
+.trade-actions input[type="number"],
+#trade-qty,#trade-mode{
+  padding:10px 12px;
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  font-size:1rem;
+  background:var(--card-bg);
+  width:200px;
+}
+
+/* ─── TABLEAU INVESTISSEMENTS ───────────────────────────── */
+.investments {
+  grid-area: investments;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 12px var(--shadow);
+  padding: var(--gap);
+}
+
+.investments table{ width:100%; border-collapse:collapse; margin-top:20px; }
+.investments th, .investments td{
+  padding:8px 12px;
+  border:1px solid var(--border);
+  font-size:.9rem;
+}
+.investments th{
+  background:var(--bg);
+  color:var(--subtext);
+}
+.investments tbody tr:nth-child(even){ background:#fafafa; }
+.investments tbody tr:hover{ background:#f1f1f1; transition:background .2s; }
+
+/* ─── MODE SHRINK (header plein écran) ─────────────────── */
+body.shrink-mode .header{
+  position:fixed; top:0; left:0; right:0;
+  margin:0; border-radius:0;
+}
+body.shrink-mode .container{
+  padding-top: calc(var(--gap) + var(--header-height));
+}
+
+/* ─── RESPONSIVE ───────────────────────────────────────── */
+/* ─────────────────  MOBILE ≤ 480 px ───────────────── */
+@media (max-width: 480px){
+
+  /* on neutralise tout débordement horizontal éventuel */
+  html, body { overflow-x: hidden; }
+
+  /* le conteneur passe en “mono‑colonne fluide” */
+  .container{
+    display:block;          /* plutôt que grid */
+    width:100%;
+    gap:12px;               /* réduit l’espacement */
+    padding:0px;
+  }
+  .back-button{
+    font-size:1rem;      /* plus gros pour le mobile */
+  }
+  /* les cartes épousent la largeur de l’écran */
+  .chart-section,
+  .trade-info,
+  .trade-actions,
+  .investments,
+  .header{
+    width:100%;
+    max-width:100%;
+    padding:12px;
+  }
+  .chart-section,
+  .investments,
+  .trade-actions,
+  .trade-info{
+    margin-top:20px;
+  }
+  /* graphe + tableau : hauteur / taille réduites */
+  #trade-chart{ height:260px; }
+  .investments table{ font-size:.8rem; }
+
+  /* info‑boxes : scroll horizontal au besoin */
+  .trade-info{
+    display:flex;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    gap:8px;
+  }
+  .info-box{
+    min-width:135px;  /* largeur min pour garder la lisibilité */
+    flex:0 0 auto;
+  }
+
+  /* zone d’actions : tout passe sur deux lignes maxi */
+  .trade-actions{
+    flex-direction:column;
+    gap:12px;
+  }
+  .trade-actions input,
+  .trade-actions select{
+    width:100%;
+  }
+  .trade-actions button{
+    width:100%;
+  }
+}
+
+/* ─── ACCESSIBILITÉ FOCUS ─────────────────────────────── */
+select:focus, input:focus, button:focus{
+  outline:none; box-shadow:none;
+}

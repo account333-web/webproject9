@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gnop</title>
+  <link rel="stylesheet" href="css/pong.css">
+  <link rel="icon" href="assets/icon.png" sizes="32x32" type="image/png">
+  <script src="/js/utils/i18n.js" defer></script>
+</head>
+<body>
+  <!-- Popup de démarrage -->
+  <div id="overlay">
+    <div id="popup">
+      <h1 data-i18n="pongTitle">Gnop | ponG</h1>
+      <p data-i18n="pongDesc">Vous êtes la balle et devez la faire sortir du terrain en évitant les raquettes.</p>
+      <button id="startBtn" data-i18n="play">Jouer</button>
+    </div>
+  </div>
+  <canvas id="gameCanvas" width="800" height="400"></canvas>
+  <script src="/js/utils/api.js" defer></script>
+  <script src="js/game/pong.js"></script>
+</body>
+</html>

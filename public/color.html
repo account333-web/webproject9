@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Game - Nerd Corner</title>
+    <link rel="stylesheet" href="css/color.css">
+    <link rel="icon" href="assets/icon.png" sizes="32x32" type="image/png" />
+    <script src="/js/utils/i18n.js" defer></script>
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <h1 data-i18n="colorTitle">Color Game</h1>
+            <div class="score-container">
+                <span data-i18n="score">Score: </span>
+                <span id="score">0</span>
+            </div>
+        </div>
+
+        <div class="game-area">
+            <div class="target-color" id="targetColor">
+                <span id="targetHex">?</span>
+            </div>
+
+            <div class="color-input">
+                <input type="text" id="hexInput" placeholder="#RRGGBB" maxlength="7" data-i18n-placeholder="hexPlaceholder">
+            </div>
+
+            <div class="feedback" id="feedback">
+                <div class="similarity">
+                    <span data-i18n="similarity">Similarité: </span>
+                    <span id="similarity">0%</span>
+                </div>
+                <div class="points">
+                    <span data-i18n="points">Points: </span>
+                    <span id="points">0</span>
+                </div>
+            </div>
+
+            <button id="submitBtn" class="btn" data-i18n="validate">Valider</button>
+            <button id="nextBtn" class="btn" style="display: none;" data-i18n="nextColor">Prochaine couleur</button>
+        </div>
+
+        <div class="instructions">
+            <h2 data-i18n="howTo">Comment jouer ?</h2>
+            <p data-i18n="step1">1. Observez la couleur cible affichée</p>
+            <p data-i18n="step2">2. Entrez le code hexadécimal de la couleur que vous pensez être la plus proche</p>
+            <p data-i18n="step3">3. Plus votre couleur est proche de la cible, plus vous gagnez de points !</p>
+            <p class="note" data-i18n="format">Format: #RRGGBB (ex: #FF0000 pour le rouge)</p>
+        </div>
+    </div>
+
+    <script src="/js/utils/api.js"></script>
+    <script src="/js/color/color.js"></script>
+</body>
+</html> 
