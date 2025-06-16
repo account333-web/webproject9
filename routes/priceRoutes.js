@@ -5,7 +5,7 @@ const checkAuth = require('../middlewares/auth');
 
 const router = express.Router();
 
-// GET /api/clickcoin/history
+// GET /api/clickcoin/history : historique du clickcoin
 router.get('/clickcoin/history', checkAuth, async (req, res) => {
   try {
     const since = req.query.since;
@@ -33,7 +33,7 @@ router.get('/clickcoin/history', checkAuth, async (req, res) => {
   }
 });
 
-// GET /api/companies/history/:id
+// GET /api/companies/history/:id : historique d'une entreprise
 router.get('/companies/history/:id', checkAuth, async (req, res) => {
   try {
     const since = req.query.since;

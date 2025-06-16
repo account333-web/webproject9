@@ -4,7 +4,7 @@ const router = express.Router();
 const { dbGet, dbRun, dbAll, rawDb } = require('../db');
 const checkAuth = require('../middlewares/auth');
 
-// GET /api/companies
+// GET /api/companies : liste des entreprises
 router.get('/', checkAuth, async (req, res) => {
   try {
     const rows = await dbAll(
@@ -19,7 +19,7 @@ router.get('/', checkAuth, async (req, res) => {
   }
 });
 
-// POST /api/companies (create new company)
+// POST /api/companies : création d'une entreprise
 router.post('/', checkAuth, async (req, res) => {
   const { name, salary } = req.body;
   const sal = parseInt(salary, 10);
@@ -64,7 +64,7 @@ router.post('/', checkAuth, async (req, res) => {
   }
 });
 
-// POST /api/companies/:id/salary (update salary offered)
+// POST /api/companies/:id/salary : mise à jour du salaire proposé
 router.post('/:id/salary', checkAuth, async (req, res) => {
   const companyId = req.params.id;
   const { salary } = req.body;
@@ -85,7 +85,7 @@ router.post('/:id/salary', checkAuth, async (req, res) => {
   }
 });
 
-// POST /api/companies/:id/name (rename company)
+// POST /api/companies/:id/name : renommage de l'entreprise
 router.post('/:id/name', checkAuth, async (req, res) => {
   const companyId = req.params.id;
   const { name } = req.body;
@@ -117,7 +117,7 @@ router.post('/:id/name', checkAuth, async (req, res) => {
   }
 });
 
-// DELETE /api/companies/:id (delete company and liquidate positions)
+// DELETE /api/companies/:id : suppression et liquidation de l'entreprise
 router.delete('/:id', checkAuth, async (req, res) => {
   const companyId = req.params.id;
   try {
@@ -130,7 +130,7 @@ router.delete('/:id', checkAuth, async (req, res) => {
 
     const assetCode = `company-${companyId}`;
 
-    // Récupérer le dernier prix
+    // Récupère le dernier prix
     const priceRow = await dbGet(
       `SELECT close
          FROM price_history

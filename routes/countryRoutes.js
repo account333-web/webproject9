@@ -5,7 +5,7 @@ const checkAuth = require('../middlewares/auth');
 
 const router = express.Router();
 
-// GET /api/countries
+// GET /api/countries : liste des pays
 router.get('/', checkAuth, async (req, res) => {
   try {
     const rows = await dbAll(

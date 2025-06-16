@@ -26,7 +26,7 @@ async function distributeSalaries() {
     // Valide la transaction
     await dbRun('COMMIT');
   } catch (err) {
-    // Annule la transaction en cas d’erreur
+    // Annule la transaction en cas d'erreur
     await dbRun('ROLLBACK');
     console.error('distributeSalaries error:', err);
     throw err;

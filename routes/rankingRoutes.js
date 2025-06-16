@@ -5,7 +5,7 @@ const checkAuth = require('../middlewares/auth');
 
 const router = express.Router();
 
-// GET /api/rankings/countries
+// GET /api/rankings/countries : classement des pays
 router.get('/countries', checkAuth, async (req, res) => {
   try {
     const rows = await dbAll(
@@ -18,7 +18,7 @@ router.get('/countries', checkAuth, async (req, res) => {
   }
 });
 
-// GET /api/rankings/companies
+// GET /api/rankings/companies : classement des entreprises
 router.get('/companies', checkAuth, async (req, res) => {
   try {
     const rows = await dbAll(
@@ -31,10 +31,10 @@ router.get('/companies', checkAuth, async (req, res) => {
   }
 });
 
-// GET /api/rankings/players
+// GET /api/rankings/players : classement des joueurs
 router.get('/players', checkAuth, async (req, res) => {
   try {
-    // On récupère aussi l'ID pour que le front puisse faire playerId = Number(p.id)
+    // L'ID est également renvoyé pour que le front puisse faire playerId = Number(p.id)
     const rows = await dbAll(
       `SELECT
          id,

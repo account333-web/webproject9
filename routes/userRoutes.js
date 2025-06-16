@@ -9,7 +9,7 @@ const checkAuth = require('../middlewares/auth');
 
 const router = express.Router();
 
-// Upload d’avatar PNG → /api/user/avatar
+// Téléversement d'avatar PNG → /api/user/avatar
 const uploadDir = path.join(__dirname, '../public/avatars');
 const upload = multer({
     storage: multer.memoryStorage(),
@@ -26,7 +26,7 @@ router.post('/avatar', checkAuth, (req, res) => {
       console.error('Avatar upload error:', err);
       return res.status(400).json({ error: err.message });
     }
-    // Re‑encodage PNG sécurisé
+    // Ré-encodage sécurisé au format PNG
     const filename = `${req.session.userId}.png`;
     const filepath = path.join(uploadDir, filename);
     await sharp(req.file.buffer)
@@ -60,7 +60,7 @@ router.get('/info', checkAuth, async (req, res) => {
     );
 
         const roundedBal = Math.round(row.balance);
-    // si le solde stocké a un écart >0,5 avec l'arrondi, on le rectifie pour garder la DB propre
+    // Si le solde diffère de plus de 0,5 de l'arrondi, on corrige pour garder la base cohérente
     if (roundedBal !== row.balance) {
       await dbRun('UPDATE users SET balance = ? WHERE id = ?', [ roundedBal, req.session.userId ]);
     }
@@ -84,7 +84,7 @@ router.post('/company', checkAuth, async (req, res) => {
   const COOLDOWN = 30 * 60 * 1000; // 1 heure
 
   try {
-    // Récupérer infos utilisateur
+    // Lecture des informations de l'utilisateur
     const user = await dbGet(
       'SELECT company_id, last_company_change FROM users WHERE id = ?',
       [req.session.userId]
@@ -105,13 +105,13 @@ router.post('/company', checkAuth, async (req, res) => {
       return res.status(400).json({ error: 'invalid_company' });
     }
 
-    // Mise à jour de l’utilisateur
+    // Mise à jour de l'utilisateur
     await dbRun(
       'UPDATE users SET company_id = ?, last_company_change = ? WHERE id = ?',
       [companyId, now, req.session.userId]
     );
 
-    // Mise à jour du nombre d'employés
+    // Actualisation du nombre d'employés
     await dbRun(
       'UPDATE companies SET employees_count = employees_count + 1 WHERE id = ?',
       [companyId]
@@ -130,7 +130,7 @@ router.post('/company', checkAuth, async (req, res) => {
   }
 });
 
-// POST /api/user/country
+// POST /api/user/country : changement de pays
 router.post('/country', checkAuth, async (req, res) => {
   const { countryId } = req.body;
   const COOLDOWN = 60 * 60 * 1000; // 1 heure
@@ -174,7 +174,7 @@ router.get('/black/token', checkAuth, async (req, res) => {
     }
   });
   
-  // --- Encaissement de la partie Snake ---
+  // --- Validation de la partie Snake ---
 router.post('/black', checkAuth, async (req, res) => {
   const { score, token } = req.body;
   const currentScore = parseInt(score, 10);
@@ -221,14 +221,14 @@ router.post('/black', checkAuth, async (req, res) => {
     );
     return res.json({ reward, balance });
   } catch (err) {
-    // ROLLBACK en cas d'erreur
+    // Annule la transaction en cas d'erreur
     await dbRun('ROLLBACK');
     console.error('Erreur encaissement Snake :', err);
     return res.status(500).json({ error: 'db_error' });
   }
 });
   
-  // 1) Quand on mange une pomme
+  // 1) Lorsqu'une pomme est mangée
 router.post('/black/eat', checkAuth, async (req, res) => {
     const { token } = req.body;
     if (!token) return res.status(400).json({ error: 'invalid_request' });
@@ -260,7 +260,7 @@ router.post('/black/eat', checkAuth, async (req, res) => {
     res.json({ apple_count: session.apple_count + 1 });
   });
   
-  // 2) À la fin du jeu, on n’envoie plus score : on envoie juste token
+  // 2) À la fin du jeu on n'envoie plus le score, uniquement le token
   router.post('/black/finish', checkAuth, async (req, res) => {
     const { token } = req.body;
     if (!token) return res.status(400).json({ error: 'invalid_request' });
@@ -299,7 +299,7 @@ router.post('/black/eat', checkAuth, async (req, res) => {
     res.json({ reward, balance });
   });
   
-// Génération d’un token pour Pong
+// Génération d'un jeton pour le Pong
 router.get('/black/pong/token', checkAuth, async (req, res) => {
   try {
     const token = crypto.randomBytes(16).toString('hex');
@@ -314,7 +314,7 @@ router.get('/black/pong/token', checkAuth, async (req, res) => {
   }
 });
 
-// --- Encaissement de la partie Pong ---
+// --- Validation de la partie Pong ---
 router.post('/black/pong', checkAuth, async (req, res) => {
   const { score, token } = req.body;
   const s = parseInt(score, 10);
@@ -368,7 +368,7 @@ router.post('/black/pong', checkAuth, async (req, res) => {
     );
     return res.json({ reward, balance });
   } catch (err) {
-    // ROLLBACK en cas d'erreur
+    // Annule la transaction en cas d'erreur
     await dbRun('ROLLBACK');
     console.error('Erreur encaissement Pong :', err);
     return res.status(500).json({ error: 'db_error' });

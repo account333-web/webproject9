@@ -31,10 +31,10 @@ const { setupMarketLoops } = require('./services/marketService');
 
 const app = express();
 
-// Compression GZIP pour réduire la taille des réponses
+// Active la compression GZIP pour alléger les réponses
 app.use(compression());
 
-// Bloque certains User-Agent typiques de bots ou d'outils en ligne de commande
+// Interdit les User‑Agents typiques de robots ou d'outils en ligne de commande
 const blockedUserAgents = [/bot/i, /crawler/i, /spider/i, /curl/i, /wget/i, /httpclient/i];
 function blockBadBots(req, res, next) {
   const ua = req.get('user-agent') || '';
@@ -45,7 +45,7 @@ function blockBadBots(req, res, next) {
 }
 app.use(blockBadBots);
 
-// ─── 1) Sécurité HTTP headers ───────────────────────────────────────────────
+// ─── 1) Configuration des en‑têtes de sécurité HTTP ─────────────────────────
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
@@ -69,7 +69,7 @@ app.use(helmet({
   }
 }));
 
-// ─── 2) Session Express ─────────────────────────────────────────────────────
+// ─── 2) Gestion de la session Express ───────────────────────────────────────
 const sessionSecret = process.env.SESSION_SECRET;
 if (!sessionSecret) {
   console.warn('SESSION_SECRET not set. Generating temporary secret.');
@@ -95,12 +95,12 @@ const sessionMiddleware = session({
 });
 app.use(sessionMiddleware);
 
-// ─── 3) Parsers & CSRF & Rate-Limit ──────────────────────────────────────────
+// ─── 3) Analyseurs, CSRF et limitation de requêtes ───────────────────────────
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// Limite générale pour mitiger les attaques par déni de service
+// Limite générale pour atténuer les attaques par déni de service
 const generalLimiter = rateLimit({
   windowMs: 60 * 1000,
   max: 100,
@@ -143,7 +143,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// ─── 4) Routes API ──────────────────────────────────────────────────────────
+// ─── 4) Déclaration des routes API ──────────────────────────────────────────
 app.use('/',             authRoutes);            // POST /login, /signup
 app.use('/api/user',     userRoutes);            // /api/user/*
 app.use('/api/companies', companyRoutes);
@@ -153,7 +153,7 @@ app.use('/api/rankings', rankingRoutes);
 app.use('/api',          priceRoutes);
 app.use('/api/badges',   badgeRoutes);
 
-// ─── 5) Protection des pages privées ────────────────────────────────────────
+// ─── 5) Accès restreint aux pages privées ───────────────────────────────────
 const protectedPages = [
   '/dashboard.html',
   '/profile.html',
@@ -163,7 +163,7 @@ const protectedPages = [
 ];
 app.get(protectedPages, checkAuth, (req, res, next) => next());
 
-// ─── 6) Fichiers statiques ──────────────────────────────────────────────────
+// ─── 6) Service des fichiers statiques ──────────────────────────────────────
 app.use(express.static(path.join(__dirname, 'public'), {
   maxAge: '1d',
   etag: true,
@@ -171,7 +171,7 @@ app.use(express.static(path.join(__dirname, 'public'), {
 }));
 app.use('/avatars', express.static(path.join(__dirname, 'public/avatars')));
 
-// ─── 7) SSE pour le marché (inchangé) ──────────────────────────────────────
+// ─── 7) Flux SSE pour le marché ───────────────────────────────────────────
 let sseClients = [];
 const HEARTBEAT = 30_000;
 app.get('/api/stream', streamLimiter, checkAuth, (req, res) => {
@@ -208,7 +208,7 @@ let nextChatMessageId = 1;
 const chatHistory     = [];
 const MAX_HISTORY     = 100;
 
-// Créez le serveur HTTP pour Express + Socket.IO
+// Création du serveur HTTP compatible avec Socket.IO
 const server = http.createServer(app);
 const io     = new Server(server, {
   path: '/socket.io',
@@ -218,12 +218,12 @@ const io     = new Server(server, {
   maxHttpBufferSize: 1e6
 });
 
-// Partagez la session Express dans Socket.IO
+// Partage la session Express avec Socket.IO
 io.use((socket, next) => {
   sessionMiddleware(socket.request, socket.request.res || {}, next);
 });
 
-// Authentification WS
+// Authentification WebSocket
 io.use((socket, next) => {
   const sess = socket.request.session;
   if (sess && sess.userId) {
@@ -235,10 +235,10 @@ io.use((socket, next) => {
 });
 
 io.on('connection', socket => {
-  // envoyer le backlog
+  // Envoi de l'historique existant
   chatHistory.forEach(m => socket.emit('chat', m));
 
-  // recevoir et rebroadcast
+  // Réception puis diffusion du message
   socket.on('chat', ({ message }) => {
     const text = String(message).trim().slice(0, 500);
     if (!text) return;
@@ -255,7 +255,7 @@ io.on('connection', socket => {
   });
 });
 
-// ─── 9) Lancement migrations, marché & écoute ───────────────────────────────
+// ─── 9) Démarrage des migrations, des boucles de marché et du serveur ───────
 initDb()
   .then(() => {
     console.log('✅ Migrations OK');
@@ -268,7 +268,7 @@ initDb()
     process.exit(1);
   });
 
-// ─── 10) Déconnexion ─────────────────────────────────────────────────────────
+// ─── 10) Gestion de la déconnexion ─────────────────────────────────────────
 app.post('/logout', checkAuth, (req, res) => {
   req.session.destroy(err => {
     if (err) {
