@@ -20,7 +20,7 @@ module.exports = (dbGet, dbRun, dbAll, checkAuth) => {
   });
 
   router.post('/buy', checkAuth, async (req, res) => {
-    // On ne prend plus le buyPrice envoyé par le client
+    // Le buyPrice fourni par le client est ignoré
     const { assetCode, quantity } = req.body;
     const { error, value } = Joi.object({
       assetCode: Joi.string().pattern(/^(clickcoin|company-\d+)$/).required(),
@@ -33,7 +33,7 @@ module.exports = (dbGet, dbRun, dbAll, checkAuth) => {
       return res.status(400).json({ error: 'missing_params' });
   
     try {
-      // Récupérer le dernier prix enregistré dans price_history
+      // Récupère le dernier prix inscrit dans price_history
       let priceRow;
       if (assetCode === 'clickcoin') {
         priceRow = await dbGet(
@@ -74,14 +74,14 @@ module.exports = (dbGet, dbRun, dbAll, checkAuth) => {
 
   /* ─── POST /api/trade/sell ────────────────────────────────────────── */
 router.post('/sell', checkAuth, async (req, res) => {
-  // 1) On ne valide que assetCode, pas de sellPrice côté client
+  // 1) Validation uniquement de l'assetCode, pas de sellPrice côté client
   const { error, value } = Joi.object({
     assetCode: Joi.string().pattern(/^(clickcoin|company-\d+)$/).required(),
   }).validate(req.body);
   if (error) return res.status(400).json({ error: 'invalid_params' });
   const { assetCode } = value;
 
-  // 2) Récupérer le prix courant en base
+  // 2) Récupération du prix courant en base
   let row;
   if (assetCode === 'clickcoin') {
     row = await dbGet(
@@ -109,7 +109,7 @@ router.post('/sell', checkAuth, async (req, res) => {
   const price = Number(row.price);
 
   try {
-    // 3) Lecture des trades de l’utilisateur
+    // 3) Lecture des positions de l'utilisateur
     const trades = await dbAll(
       'SELECT quantity, buy_price FROM trades WHERE user_id = ? AND asset_code = ?',
       [req.session.userId, assetCode]
@@ -118,7 +118,7 @@ router.post('/sell', checkAuth, async (req, res) => {
       return res.status(400).json({ error: 'no_trades' });
     }
 
-    // 4) Calculs basés sur price serveur
+    // 4) Calculs basés sur le prix serveur
     const totalQty  = trades.reduce((sum, t) => sum + t.quantity, 0);
     const totalCost = trades.reduce((sum, t) => sum + t.quantity * t.buy_price, 0);
     const proceeds  = totalQty * price;

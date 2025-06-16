@@ -1,10 +1,10 @@
 // db/migrations.js
 const { dbRun, dbAll } = require('./index');
 
-// Initialize tables and default data
+// Initialisation des tables et des données par défaut
 async function initDb() {
     try {
-      // --- Users table and migrations ---
+      // --- Table `users` et migrations ---
       await dbRun(`
         CREATE TABLE IF NOT EXISTS users (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -23,13 +23,13 @@ async function initDb() {
       if (!userCols.some(c => c.name === 'snake_best_score')) {
         await dbRun('ALTER TABLE users ADD COLUMN snake_best_score INTEGER NOT NULL DEFAULT 0');
       }
-      // … dans initDb(), après avoir ajouté snake_best_score
+      // Après l'ajout de `snake_best_score`
       if (!userCols.some(c => c.name === 'pong_best_score')) {
         await dbRun(
           'ALTER TABLE users ADD COLUMN pong_best_score INTEGER NOT NULL DEFAULT 0'
         );
       }
-      // --- Countries table ---
+      // --- Table `countries` ---
       await dbRun(`
         CREATE TABLE IF NOT EXISTS countries (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -41,7 +41,7 @@ async function initDb() {
         )
       `);
 
-      // --- Companies table and migrations ---
+      // --- Table `companies` et migrations ---
       await dbRun(`
         CREATE TABLE IF NOT EXISTS companies (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -62,7 +62,7 @@ async function initDb() {
         await dbRun('ALTER TABLE companies ADD COLUMN employees_count INTEGER DEFAULT 0');
       }
 
-      // --- Trades table ---
+      // --- Table `trades` ---
       await dbRun(`
         CREATE TABLE IF NOT EXISTS trades (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -74,7 +74,7 @@ async function initDb() {
         )
       `);
 
-      // --- Price history table and migrations ---
+      // --- Table `price_history` et migrations ---
       await dbRun(`
         CREATE TABLE IF NOT EXISTS price_history (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -95,7 +95,7 @@ async function initDb() {
         }
       }
 
-      // --- Default countries data ---
+      // --- Données de pays par défaut ---
       const defaultCountries = [
         ['GPT-City', 0.05, 100, 500],
         ['MilliGram', 0.03, 120, 400],
@@ -110,7 +110,7 @@ async function initDb() {
         );
       }
 
-      // --- Snake game migrations ---
+      // --- Migrations du jeu Snake ---
       await dbRun(`
         CREATE TABLE IF NOT EXISTS snake_sessions (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -121,7 +121,7 @@ async function initDb() {
           FOREIGN KEY(user_id) REFERENCES users(id)
         )
       `);
-      // après CREATE TABLE IF NOT EXISTS snake_sessions ( ... )
+      // Après la création de `snake_sessions`
       const sessionCols = await dbAll("PRAGMA table_info(snake_sessions)");
       if (!sessionCols.some(c => c.name === "apple_count")) {
         await dbRun("ALTER TABLE snake_sessions ADD COLUMN apple_count INTEGER NOT NULL DEFAULT 0");
@@ -129,7 +129,7 @@ async function initDb() {
       if (!sessionCols.some(c => c.name === "last_eat")) {
         await dbRun("ALTER TABLE snake_sessions ADD COLUMN last_eat INTEGER");
       }
-      // Vérifie et ajoute les champs pour cooldown et référence ID entreprise/pays
+      // Ajout des colonnes de cooldown et des références entreprise/pays
       if (!userCols.some(c => c.name === 'company_id')) {
         await dbRun('ALTER TABLE users ADD COLUMN company_id INTEGER');
       }
@@ -140,13 +140,13 @@ async function initDb() {
         await dbRun('ALTER TABLE users ADD COLUMN last_country_change INTEGER');
       }
 
-      // Ajout du champ created_at dans trades (pour empêcher les ventes immédiates)
+      // Ajout de la colonne created_at dans `trades` pour empêcher les ventes immédiates
       const tradeCols = await dbAll("PRAGMA table_info(trades)");
       if (!tradeCols.some(c => c.name === 'created_at')) {
         await dbRun("ALTER TABLE trades ADD COLUMN created_at INTEGER DEFAULT (strftime('%s','now') * 1000)");
       }
 
-      // Table de sessions sécurisées pour Pong
+      // Table des sessions sécurisées pour Pong
       await dbRun(`
         CREATE TABLE IF NOT EXISTS pong_sessions (
           id INTEGER PRIMARY KEY AUTOINCREMENT,

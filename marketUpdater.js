@@ -61,7 +61,7 @@ module.exports = function setupMarketLoops(dbGet, dbRun, dbAll, broadcastPrice, 
         const { high, low } = generateOHLC(open, close, volatility * 1.5);
         const ts = new Date().toISOString();
 
-        // Employés de l’entreprise (corrigé avec company_id)
+        // Nombre d'employés de l'entreprise (via company_id)
         const r = await dbGet('SELECT COUNT(*) AS cnt FROM users WHERE company_id = ?', [c.id]);
         const employeeCount = r?.cnt ?? 0;
 
@@ -73,7 +73,7 @@ module.exports = function setupMarketLoops(dbGet, dbRun, dbAll, broadcastPrice, 
         const deltaPct = (Math.random() * 0.1) - 0.05;
         const randomDelta = Math.round(oldCapital * deltaPct);
 
-        // Bonus basé sur les employés
+        // Bonus en fonction du nombre d'employés
         const employeeBonus = employeeCount * 10;
 
         // Nouveau capital total
@@ -96,7 +96,7 @@ module.exports = function setupMarketLoops(dbGet, dbRun, dbAll, broadcastPrice, 
     await applyTaxes();
   }
 
-  // Démarrage initial + boucles
+  // Démarrage initial et mise en place des boucles
   processClickcoin();
   setInterval(processClickcoin, EVENT_INTERVAL_MS);
 

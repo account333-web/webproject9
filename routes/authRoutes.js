@@ -5,10 +5,10 @@ const { dbGet, dbRun } = require('../db');
 
 const router = express.Router();
 
-// Clé : pseudo ou IP → { count, lastFailureTime, lockedUntil }
+// Map pseudo ou IP → { count, lastFailureTime, lockedUntil }
 const loginFailures = {};
 
-// Captcha en mémoire : id -> { answer, created }
+// Captcha conservé en mémoire : id → { answer, created }
 const captchaStore = new Map();
 setInterval(() => {
   const now = Date.now();
@@ -117,12 +117,11 @@ router.post('/signup', async (req, res) => {
   if (!ok) {
     return res.redirect('/signup.html?error=captcha');
   }
-  // Nouveau : longueur max 8
-  // Nouveau : longueur max 8
+  // Limite la longueur du pseudo à 8 caractères
   if (pseudo.length > 8) {
     return res.redirect('/signup.html?error=length');
   }
-  // Bloque les caractères cyrilliques dans le pseudo
+  // Interdit les caractères cyrilliques dans le pseudo
   if (/[\u0400-\u04FF]/.test(pseudo)) {
     return res.redirect('/signup.html?error=invalidchars');
   }
